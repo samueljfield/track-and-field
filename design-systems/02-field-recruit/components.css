@@ -276,7 +276,10 @@
       visibility var(--duration-base);
   }
   .js .banner.is-open .banner__links { opacity: 1; transform: none; visibility: visible; }
-  .js .banner__links a { display: inline-block; }
+  .js .banner__links { gap: 0; }
+  /* Taller links so each is an easy thumb target */
+  .js .banner__links a { display: inline-block; padding-block: 0.4rem; }
+  .banner__toggle { min-height: 2.75rem; }
 }
 
 /* ---- Footer ---- */

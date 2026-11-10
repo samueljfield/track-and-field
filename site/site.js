@@ -35,9 +35,34 @@ const spy = new IntersectionObserver((entries) => {
 }, { rootMargin: '-45% 0px -50% 0px' });
 links.forEach((link) => spy.observe(document.querySelector(link.hash)));
 
-// Hold the hero video still for people who ask for less motion
-if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
-  document.querySelector('.hero video').pause();
+// Hero video: keep it playing wherever the browser allows. Phones can block
+// autoplay (iPhone Low Power Mode, data saver) or stall it after the tab
+// is hidden, so retry on load, on the first touch or scroll, and whenever
+// the hero comes back into view. The poster shows until it plays.
+const heroVideo = document.querySelector('.hero video');
+const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
+let heroInView = true;
+
+const playHero = () => {
+  if (reduceMotion.matches || !heroInView || document.hidden || !heroVideo.paused) return;
+  heroVideo.muted = true; // some browsers only allow autoplay when muted is set in script too
+  const attempt = heroVideo.play();
+  if (attempt) attempt.catch(() => {});
+};
+
+if (reduceMotion.matches) {
+  heroVideo.pause();
+} else {
+  heroVideo.addEventListener('canplay', playHero);
+  ['touchstart', 'pointerdown', 'scroll', 'keydown'].forEach((type) =>
+    addEventListener(type, playHero, { passive: true }));
+  document.addEventListener('visibilitychange', playHero);
+  addEventListener('pageshow', playHero); // back/forward cache on iPhone
+  new IntersectionObserver(([entry]) => {
+    heroInView = entry.isIntersecting;
+    if (heroInView) playHero(); else heroVideo.pause(); // saves battery off screen
+  }).observe(document.querySelector('.hero'));
+  playHero();
 }
 
 // Consultation form: sends straight to sam@fieldrecruit.com.au through Web3Forms.
