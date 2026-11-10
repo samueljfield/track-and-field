@@ -82,8 +82,7 @@
 /* The wordmark is about 3.5em wide, so size it to fit its column */
 .hero__brand { align-self: end; container-type: inline-size; }
 .hero__brand .brand { --brand-size: min(100cqw / 3.6, 8.5rem); }
-/* Instagram sits bottom right, level with the wordmark */
-.hero__side { justify-self: end; align-self: end; padding-bottom: var(--space-3); }
+.hero__side { justify-self: end; }
 
 @media (max-width: 68rem) {
   .hero__brand .brand { --brand-size: clamp(3rem, 16vw, 6rem); }
