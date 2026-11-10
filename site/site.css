@@ -11,6 +11,41 @@ html { scroll-padding-top: 5.5rem; }
   .split__head { position: sticky; top: 7.5rem; align-self: start; }
 }
 
-.services__item > h3 { margin-bottom: var(--space-5); }
+/* Services: recruiting and mentoring open and close, headings centred */
+.services { align-items: start; }
+.service { border-top: 1px solid var(--color-border); }
+.service summary {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  padding-block: var(--space-5);
+  text-align: center;
+  cursor: pointer;
+  list-style: none;
+}
+.service summary::-webkit-details-marker { display: none; }
+.service summary::after {
+  content: "+";
+  font-size: var(--text-xl);
+  line-height: 1;
+  color: var(--color-text-muted);
+  transition: transform var(--duration-base) var(--ease-out), color var(--duration-base) var(--ease-out);
+}
+.service summary:hover::after { color: var(--color-text); }
+.service[open] summary::after { transform: rotate(45deg); }
+.service summary:focus-visible { outline: 1px solid var(--color-border-strong); outline-offset: 4px; }
+.service__body { padding-bottom: var(--space-5); }
+
+/* Smooth open where the browser supports it */
+@supports (interpolate-size: allow-keywords) {
+  .service { interpolate-size: allow-keywords; }
+  .service::details-content {
+    block-size: 0;
+    overflow: hidden;
+    transition: block-size var(--duration-base) var(--ease-out), content-visibility var(--duration-base) allow-discrete;
+  }
+  .service[open]::details-content { block-size: auto; }
+}
 
 .form-status { min-height: 1.5em; font-size: var(--text-sm); }

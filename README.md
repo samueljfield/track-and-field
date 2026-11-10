@@ -10,7 +10,7 @@ Website for a college athletics recruiting and mentoring service.
 python -m http.server 8000 --bind 127.0.0.1
 ```
 
-Then open http://127.0.0.1:8000/. The consultation form is not connected to a backend yet.
+Then open http://127.0.0.1:8000/. The consultation form sends to sam@fieldrecruit.com.au through Web3Forms. Set `WEB3FORMS_KEY` in `site/site.js`; without it the form opens the visitor’s email app instead.
 
 ## Design systems
 
