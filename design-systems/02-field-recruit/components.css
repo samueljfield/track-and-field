@@ -112,7 +112,7 @@
   padding: 0.7em 1.15em;
   border: 1px solid var(--color-accent);
   border-radius: var(--radius);
-  font-size: var(--text-lg);
+  font-size: var(--text-base);
   line-height: 1.1;
   letter-spacing: var(--tracking-snug);
   text-decoration: none;
@@ -128,7 +128,7 @@
 .section--ink .btn--primary:hover { background: var(--color-on-ink-muted); border-color: var(--color-on-ink-muted); }
 .section--ink .btn--secondary:hover { background: rgb(248 248 248 / 0.12); }
 
-.link-arrow { font-size: var(--text-lg); letter-spacing: var(--tracking-snug); }
+.link-arrow { font-size: var(--text-base); letter-spacing: var(--tracking-snug); }
 .link-arrow::after {
   content: "\2192";
   display: inline-block;
@@ -143,12 +143,12 @@
 .mark__event { font-size: var(--text-sm); font-weight: var(--weight-medium); color: var(--color-text-muted); }
 .mark__time {
   margin-top: var(--space-2);
-  font-size: var(--text-2xl);
+  font-size: var(--text-xl);
   line-height: 1;
   letter-spacing: var(--tracking-tight);
   font-variant-numeric: tabular-nums;
 }
-.mark__from { margin-right: 0.25em; color: var(--color-text-muted); font-size: 0.55em; letter-spacing: var(--tracking-snug); }
+.mark__from { margin-right: 0.25em; color: var(--color-text-muted); font-size: var(--text-base); letter-spacing: var(--tracking-snug); }
 
 /* ---- University logos: black and white, to match the photography ---- */
 .logos {
@@ -159,7 +159,10 @@
   list-style: none;
   padding: 0;
 }
-.logos img { width: auto; height: clamp(3.5rem, 8vw, 5.5rem); filter: grayscale(1) contrast(1.15); }
+.logos a { display: block; transition: opacity var(--duration-fast); }
+.logos a:hover { opacity: 0.6; }
+.logos a:focus-visible { outline: 1px solid var(--color-border-strong); outline-offset: 4px; }
+.logos img { display: block; width: auto; height: clamp(3.5rem, 8vw, 5.5rem); filter: grayscale(1) contrast(1.15); }
 
 /* ---- Rows: hairline list, for audiences and steps ---- */
 .rows { list-style: none; padding: 0; border-top: 1px solid var(--color-border-strong); }
@@ -216,7 +219,7 @@
   border-bottom: 1px solid var(--color-border-strong);
   border-radius: 0;
   background: transparent;
-  font-size: var(--text-lg);
+  font-size: var(--text-base);
 }
 .field textarea { min-height: 7rem; resize: vertical; }
 .field ::placeholder { color: var(--color-text-muted); opacity: 1; }
@@ -248,8 +251,8 @@
   padding: var(--space-2) var(--gutter);
 }
 .banner .brand { --brand-size: 1.0625rem; }
-.banner__links { flex-direction: row; gap: var(--space-5); font-size: var(--text-lg); letter-spacing: var(--tracking-snug); }
-.banner__toggle { display: none; padding: var(--space-2) 0; border: 0; background: none; font-size: var(--text-lg); cursor: pointer; }
+.banner__links { flex-direction: row; gap: var(--space-5); font-size: var(--text-base); letter-spacing: var(--tracking-snug); }
+.banner__toggle { display: none; padding: var(--space-2) 0; border: 0; background: none; font-size: var(--text-base); cursor: pointer; }
 
 /* Narrow screens: the links become a panel that drops from the banner */
 @media (max-width: 60rem) {
