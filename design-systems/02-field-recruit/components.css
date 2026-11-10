@@ -296,3 +296,5 @@
   gap: var(--space-5);
   padding-block: var(--space-6);
 }
+.site-footer__end { display: flex; flex-direction: column; align-items: flex-end; gap: var(--space-3); }
+.site-footer__social { width: 1.5rem; }
