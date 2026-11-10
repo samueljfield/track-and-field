@@ -13,7 +13,6 @@ html { scroll-padding-top: 5.5rem; }
 
 /* Services: recruiting and mentoring open and close, headings centred */
 .services { align-items: start; }
-.service { border-top: 1px solid var(--color-border); }
 .service summary {
   display: flex;
   flex-direction: column;
