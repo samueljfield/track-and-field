@@ -48,6 +48,3 @@ html { scroll-padding-top: 5.5rem; }
 }
 
 .form-status { min-height: 1.5em; font-size: var(--text-sm); }
-
-/* Who we work with: top line matches the lighter lines between rows */
-.rows { border-top-color: var(--color-border); }
