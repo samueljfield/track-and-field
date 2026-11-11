@@ -39,6 +39,8 @@ links.forEach((link) => spy.observe(document.querySelector(link.hash)));
 // autoplay (iPhone Low Power Mode, data saver) or stall it after the tab
 // is hidden, so retry on load, on the first touch or scroll, and whenever
 // the hero comes back into view. The poster shows until it plays.
+// In-app browsers (Instagram, Facebook, TikTok) only allow play() during a
+// real tap, which browsers count on touchend and click, not touchstart.
 const heroVideo = document.querySelector('.hero video');
 const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
 let heroInView = true;
@@ -54,7 +56,7 @@ if (reduceMotion.matches) {
   heroVideo.pause();
 } else {
   heroVideo.addEventListener('canplay', playHero);
-  ['touchstart', 'pointerdown', 'scroll', 'keydown'].forEach((type) =>
+  ['touchstart', 'touchend', 'pointerdown', 'pointerup', 'click', 'scroll', 'keydown'].forEach((type) =>
     addEventListener(type, playHero, { passive: true }));
   document.addEventListener('visibilitychange', playHero);
   addEventListener('pageshow', playHero); // back/forward cache on iPhone
