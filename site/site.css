@@ -47,4 +47,12 @@ html { scroll-padding-top: 5.5rem; }
   .service[open]::details-content { block-size: auto; }
 }
 
+/* Phones and tablets: Sam's portrait sits after his bio, before the marks and logos */
+@media (max-width: 59.99rem) {
+  .experience__body { display: contents; }
+  #experience .split { gap: var(--space-6); }
+  #experience .split__photo { order: 1; }
+  #experience .marks, #experience .logos { order: 2; }
+}
+
 .form-status { min-height: 1.5em; font-size: var(--text-sm); }
