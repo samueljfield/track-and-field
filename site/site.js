@@ -46,25 +46,94 @@ const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
 let heroInView = true;
 
 const playHero = () => {
-  if (reduceMotion.matches || !heroInView || document.hidden || !heroVideo.paused) return;
+  if (reduceMotion.matches || flipbookOn || !heroInView || document.hidden || !heroVideo.paused) return;
   heroVideo.muted = true; // some browsers only allow autoplay when muted is set in script too
   const attempt = heroVideo.play();
   if (attempt) attempt.catch(() => {});
 };
 
+// Instagram, Facebook and TikTok open links in their own browser, which won't
+// autoplay video. There the hero plays a flipbook of still frames instead
+// (portrait crops of the same footage, 12 per second), which always animates.
+// Phones that block the video for another reason fall back to it as well.
+// Add ?hero=frames to the address to preview the flipbook anywhere.
+const IN_APP = /Instagram|FBAN|FBAV|FB_IAB|TikTok|musical_ly|BytedanceWebview|Snapchat|LinkedInApp/i;
+const FRAME_COUNT = 135;
+const FRAME_FPS = 12;
+const FRAME_DIR = 'design-systems/02-field-recruit/media/hero-frames/';
+let flipbookOn = false;
+
+const startFlipbook = () => {
+  if (flipbookOn) return;
+  flipbookOn = true;
+  heroVideo.pause();
+  heroVideo.removeAttribute('autoplay');
+  heroVideo.hidden = true;
+
+  const media = document.querySelector('.hero__media');
+  const layers = [0, 1].map(() => {
+    const img = document.createElement('img');
+    img.className = 'hero__frame';
+    img.alt = '';
+    img.decoding = 'async';
+    media.prepend(img);
+    return img;
+  });
+
+  // Fetch every frame in order, six at a time, so playback can begin early
+  const urls = Array.from({ length: FRAME_COUNT }, (_, i) => `${FRAME_DIR}${i}.jpg`);
+  const ready = new Array(FRAME_COUNT).fill(false);
+  let next = 0;
+  const fetchNext = () => {
+    if (next >= FRAME_COUNT) return;
+    const i = next++;
+    fetch(urls[i]).then(() => { ready[i] = true; }).catch(() => {}).finally(fetchNext);
+  };
+  for (let k = 0; k < 6; k++) fetchNext();
+
+  // Two stacked images: decode the next frame off screen, then swap, so it never flickers
+  let shown = -1, front = 0, busy = false;
+  const tick = () => {
+    if (busy || !heroInView || document.hidden) return;
+    const i = (shown + 1) % FRAME_COUNT;
+    if (!ready[i]) return; // still downloading: hold the current frame
+    busy = true;
+    const back = layers[1 - front];
+    back.src = urls[i];
+    back.decode().catch(() => {}).then(() => {
+      back.classList.add('is-shown');
+      layers[front].classList.remove('is-shown');
+      front = 1 - front;
+      shown = i;
+      busy = false;
+    });
+  };
+  setInterval(tick, 1000 / FRAME_FPS);
+};
+
 if (reduceMotion.matches) {
   heroVideo.pause();
+} else if (IN_APP.test(navigator.userAgent) || new URLSearchParams(location.search).get('hero') === 'frames') {
+  startFlipbook();
 } else {
   heroVideo.addEventListener('canplay', playHero);
   ['touchstart', 'touchend', 'pointerdown', 'pointerup', 'click', 'scroll', 'keydown'].forEach((type) =>
     addEventListener(type, playHero, { passive: true }));
   document.addEventListener('visibilitychange', playHero);
   addEventListener('pageshow', playHero); // back/forward cache on iPhone
+  playHero();
+  // A phone held upright that still hasn't started the video after 4 seconds
+  setTimeout(() => {
+    if (heroVideo.paused && heroInView && !document.hidden && matchMedia('(orientation: portrait)').matches) startFlipbook();
+  }, 4000);
+}
+
+if (!reduceMotion.matches) {
   new IntersectionObserver(([entry]) => {
     heroInView = entry.isIntersecting;
+    if (flipbookOn) return;
     if (heroInView) playHero(); else heroVideo.pause(); // saves battery off screen
   }).observe(document.querySelector('.hero'));
-  playHero();
 }
 
 // Consultation form: sends straight to sam@fieldrecruit.com.au through Web3Forms.
