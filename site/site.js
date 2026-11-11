@@ -5,7 +5,7 @@ const links = [...banner.querySelectorAll('.banner__links a')];
 const setOpen = (open) => {
   banner.classList.toggle('is-open', open);
   toggle.setAttribute('aria-expanded', open);
-  toggle.textContent = open ? 'Close' : 'Menu';
+  toggle.textContent = open ? 'close' : 'menu';
 };
 
 // Banner drops in once the hero has scrolled nearly out of view
