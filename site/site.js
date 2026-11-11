@@ -54,12 +54,12 @@ const playHero = () => {
 
 // Instagram, Facebook and TikTok open links in their own browser, which won't
 // autoplay video. There the hero plays a flipbook of still frames instead
-// (portrait crops of the same footage, 12 per second), which always animates.
+// (portrait crops of the same footage at its own 30 per second), which always animates.
 // Phones that block the video for another reason fall back to it as well.
 // Add ?hero=frames to the address to preview the flipbook anywhere.
 const IN_APP = /Instagram|FBAN|FBAV|FB_IAB|TikTok|musical_ly|BytedanceWebview|Snapchat|LinkedInApp/i;
-const FRAME_COUNT = 135;
-const FRAME_FPS = 12;
+const FRAME_COUNT = 339;
+const FRAME_FPS = 29.97;
 const FRAME_DIR = 'design-systems/02-field-recruit/media/hero-frames/';
 let flipbookOn = false;
 
@@ -80,7 +80,7 @@ const startFlipbook = () => {
     return img;
   });
 
-  // Fetch every frame in order, six at a time, so playback can begin early
+  // Fetch every frame in order, eight at a time, so playback can begin early
   const urls = Array.from({ length: FRAME_COUNT }, (_, i) => `${FRAME_DIR}${i}.jpg`);
   const ready = new Array(FRAME_COUNT).fill(false);
   let next = 0;
@@ -89,7 +89,7 @@ const startFlipbook = () => {
     const i = next++;
     fetch(urls[i]).then(() => { ready[i] = true; }).catch(() => {}).finally(fetchNext);
   };
-  for (let k = 0; k < 6; k++) fetchNext();
+  for (let k = 0; k < 8; k++) fetchNext();
 
   // Two stacked images: decode the next frame off screen, then swap, so it never flickers
   let shown = -1, front = 0, busy = false;
