@@ -142,47 +142,49 @@ if (!reduceMotion.matches) {
 const WEB3FORMS_KEY = '13288dcf-a3a5-4920-9355-ddfc054163ca';
 const TO_EMAIL = 'sam@fieldrecruit.com.au';
 
-// "email Sam" link under the form
-document.querySelectorAll('.contact-email').forEach((link) => {
-  link.href = `mailto:${TO_EMAIL}?subject=${encodeURIComponent('Free consultation')}`;
-  link.textContent = TO_EMAIL;
-});
-
-// Booking calendar: paste the link to your Google Calendar appointment schedule
-// (Google Calendar > your booking page > Share > Website embed, copy the src="…" link,
-// or the calendar.app.google/… link). Leave it empty to hide the calendar.
-const BOOKING_URL = 'https://calendar.google.com/calendar/appointments/schedules/AcZssZ0AJfvdPDhUf9Mnr_HBGpAoTGFOf7TlsxkGCCMMLZBSx5x86Jh-OyUh3j--x9DlaQsa1etcAv2p?gv=true';
-
-if (BOOKING_URL) {
-  const booking = document.querySelector('#booking');
-  const iframe = document.createElement('iframe');
-  iframe.src = BOOKING_URL;
-  iframe.title = 'Book a free consultation';
-  iframe.loading = 'lazy';
-  booking.querySelector('.booking__frame').append(iframe);
-  booking.hidden = false;
-}
+// Google Calendar booking page ("Free consultation" appointment schedule on
+// the Field Recruit account). Book opens it in a new tab.
+const BOOKING_URL = 'https://calendar.google.com/calendar/appointments/schedules/AcZssZ0AJfvdPDhUf9Mnr_HBGpAoTGFOf7TlsxkGCCMMLZBSx5x86Jh-OyUh3j--x9DlaQsa1etcAv2p';
 
 const form = document.querySelector('#consultation-form');
 const status = form.querySelector('.form-status');
 const sendButton = form.querySelector('button[type="submit"]');
 
+// Status line with an optional link back to the booking page
+const setStatus = (text, linkText) => {
+  status.textContent = text;
+  if (linkText) {
+    const link = document.createElement('a');
+    link.href = BOOKING_URL;
+    link.target = '_blank';
+    link.rel = 'noopener';
+    link.textContent = linkText;
+    status.append(' ', link);
+  }
+};
+
+// Book: open Sam's calendar in a new tab straight away (it has to happen
+// during the click, or browsers block the tab), and at the same time email
+// Sam the details. Google sends its own email once a time is chosen; the
+// visitor's email is in both subjects so the two can be matched up.
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
   const name = form.elements.name.value.trim();
   const email = form.elements.email.value.trim();
   const about = form.elements.goals.value.trim();
-  const subject = `Free consultation: ${name}`;
+  const subject = `Consultation booking: ${name} (${email})`;
+
+  window.open(BOOKING_URL, '_blank', 'noopener');
 
   if (!WEB3FORMS_KEY) {
     const body = `Name: ${name}\nEmail: ${email}\n\n${about}`;
     window.location.href = `mailto:${TO_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    status.textContent = 'Your email app should open with your message. Press send there to reach Sam.';
+    setStatus('Choose a time in the tab that just opened, then press send in your email app.', 'Calendar didn’t open?');
     return;
   }
 
   sendButton.disabled = true;
-  status.textContent = 'Sending…';
+  setStatus('Opening Sam’s calendar and sending your details…');
   try {
     const res = await fetch('https://api.web3forms.com/submit', {
       method: 'POST',
@@ -193,21 +195,16 @@ form.addEventListener('submit', async (e) => {
         from_name: 'Field Recruit website',
         name,
         email,
-        message: about || '(nothing written)',
+        message: `${about || '(nothing written)'}\n\nThey were sent to your booking page. Google will email you separately when they choose a time, from the booking made with ${email}.`,
         botcheck: form.elements.botcheck.checked,
       }),
     });
     const result = await res.json();
     if (!res.ok || !result.success) throw new Error(result.message || res.status);
     form.reset();
-    if (BOOKING_URL) {
-      status.textContent = 'Thanks, your message has been sent. Now pick a time for your call below.';
-      document.querySelector('#booking').scrollIntoView({ behavior: reduceMotion.matches ? 'auto' : 'smooth' });
-    } else {
-      status.textContent = 'Thanks, your message has been sent. Sam will be in touch soon.';
-    }
+    setStatus('Thanks, Sam has your details. Now choose a time in the tab that just opened.', 'Calendar didn’t open?');
   } catch {
-    status.textContent = `Sorry, that didn’t send. Please try again or email ${TO_EMAIL}.`;
+    setStatus(`Sorry, your details didn’t send. Please try again or email ${TO_EMAIL}. You can still choose a time:`, 'open Sam’s calendar');
   } finally {
     sendButton.disabled = false;
   }
