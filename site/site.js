@@ -142,6 +142,27 @@ if (!reduceMotion.matches) {
 const WEB3FORMS_KEY = '13288dcf-a3a5-4920-9355-ddfc054163ca';
 const TO_EMAIL = 'sam@fieldrecruit.com.au';
 
+// "email Sam" link under the form
+document.querySelectorAll('.contact-email').forEach((link) => {
+  link.href = `mailto:${TO_EMAIL}?subject=${encodeURIComponent('Free consultation')}`;
+  link.textContent = TO_EMAIL;
+});
+
+// Booking calendar: paste the link to your Google Calendar appointment schedule
+// (Google Calendar > your booking page > Share > Website embed, copy the src="…" link,
+// or the calendar.app.google/… link). Leave it empty to hide the calendar.
+const BOOKING_URL = 'https://calendar.google.com/calendar/appointments/schedules/AcZssZ0AJfvdPDhUf9Mnr_HBGpAoTGFOf7TlsxkGCCMMLZBSx5x86Jh-OyUh3j--x9DlaQsa1etcAv2p?gv=true';
+
+if (BOOKING_URL) {
+  const booking = document.querySelector('#booking');
+  const iframe = document.createElement('iframe');
+  iframe.src = BOOKING_URL;
+  iframe.title = 'Book a free consultation';
+  iframe.loading = 'lazy';
+  booking.querySelector('.booking__frame').append(iframe);
+  booking.hidden = false;
+}
+
 const form = document.querySelector('#consultation-form');
 const status = form.querySelector('.form-status');
 const sendButton = form.querySelector('button[type="submit"]');
@@ -179,7 +200,12 @@ form.addEventListener('submit', async (e) => {
     const result = await res.json();
     if (!res.ok || !result.success) throw new Error(result.message || res.status);
     form.reset();
-    status.textContent = 'Thanks, your message has been sent. Sam will be in touch soon.';
+    if (BOOKING_URL) {
+      status.textContent = 'Thanks, your message has been sent. Now pick a time for your call below.';
+      document.querySelector('#booking').scrollIntoView({ behavior: reduceMotion.matches ? 'auto' : 'smooth' });
+    } else {
+      status.textContent = 'Thanks, your message has been sent. Sam will be in touch soon.';
+    }
   } catch {
     status.textContent = `Sorry, that didn’t send. Please try again or email ${TO_EMAIL}.`;
   } finally {
