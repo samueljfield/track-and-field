@@ -53,8 +53,3 @@ html { scroll-padding-top: 5.5rem; }
   #experience .split__photo { order: 1; }
 }
 
-.form-status { min-height: 1.5em; font-size: var(--text-sm); }
-
-/* Free consultation: details form with one Book button */
-.consult > * + * { margin-top: var(--space-7); }
-.form-status a { color: var(--color-text); text-decoration: underline; text-underline-offset: 0.2em; }

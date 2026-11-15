@@ -24,11 +24,11 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="design-systems/02-field-recruit/tokens.css?v=19">
-  <link rel="stylesheet" href="design-systems/02-field-recruit/base.css?v=19">
-  <link rel="stylesheet" href="design-systems/02-field-recruit/components.css?v=19">
-  <link rel="stylesheet" href="site/site.css?v=19">
-  <script src="site/site.js?v=19" defer></script>
+  <link rel="stylesheet" href="design-systems/02-field-recruit/tokens.css?v=20">
+  <link rel="stylesheet" href="design-systems/02-field-recruit/base.css?v=20">
+  <link rel="stylesheet" href="design-systems/02-field-recruit/components.css?v=20">
+  <link rel="stylesheet" href="site/site.css?v=20">
+  <script src="site/site.js?v=20" defer></script>
 </head>
 <body id="top">
 
@@ -183,15 +183,11 @@
     <section class="section" id="consultation">
       <div class="container split">
         <h2 class="split__head">free consultation</h2>
-        <div class="stack consult" style="--stack-gap:var(--space-7)">
-        <form class="stack" id="consultation-form">
-          <div class="field"><label for="f-name">Name</label><input id="f-name" name="name" type="text" autocomplete="name" placeholder="Athlete or parent name" required></div>
-          <div class="field"><label for="f-email">Email</label><input id="f-email" name="email" type="email" autocomplete="email" placeholder="you@example.com" required></div>
-          <div class="field"><label for="f-goals">Tell us about you</label><textarea id="f-goals" name="goals" placeholder="Events, personal bests, and academic and athletic aspirations"></textarea></div>
-          <input type="checkbox" name="botcheck" hidden tabindex="-1" autocomplete="off">
-          <button class="btn btn--primary" type="submit">Book</button>
-          <p class="form-status" role="status"></p>
-        </form>
+        <!-- Google Calendar booking page ("Free consultation" on the Field Recruit
+             account). Its form asks for name, email and "Tell us about you", so the
+             booking email has their details and the time slot together. -->
+        <div>
+          <a class="btn btn--primary" href="https://calendar.google.com/calendar/appointments/schedules/AcZssZ0AJfvdPDhUf9Mnr_HBGpAoTGFOf7TlsxkGCCMMLZBSx5x86Jh-OyUh3j--x9DlaQsa1etcAv2p" target="_blank" rel="noopener">Book</a>
         </div>
       </div>
     </section>
