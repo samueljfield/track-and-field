@@ -10,7 +10,7 @@ Website for a college athletics recruiting and mentoring service.
 python -m http.server 8000 --bind 127.0.0.1
 ```
 
-Then open http://127.0.0.1:8000/. The free consultation Book button opens the "Free consultation" Google Calendar booking page on the Field Recruit account in a new tab. Hours, the Google Meet link and the booking questions (name, email and "Tell us about you") are all set in Google Calendar, and each booking arrives as one email with the details and the time slot together.
+Then open http://127.0.0.1:8000/. The free consultation form (name, email and "Tell us about you") emails each inquiry to the Field Recruit inbox through Web3Forms.
 
 ## Design systems
 

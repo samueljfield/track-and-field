@@ -53,7 +53,4 @@ html { scroll-padding-top: 5.5rem; }
   #experience .split__photo { order: 1; }
 }
 
-
-/* Free consultation: Book button centred in its column, level with the heading */
-.consult-book { display: flex; justify-content: center; align-items: center; }
-.consult-book .btn { font-size: var(--text-xl); } /* same size as the Recruiting and Mentoring headings */
+.form-status { min-height: 1.5em; font-size: var(--text-sm); }
